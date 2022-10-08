@@ -16,7 +16,7 @@ fn lerp(a:f32,b:f32,percentage:f32)->f32{
 @group(0) @binding(0)
 var ytexture: texture_2d<f32>;
 @group(0) @binding(1)
-var utexture: texture_2d<f32>;
+var uvtexture: texture_2d<f32>;
 // [[group(0),binding(2)]]
 // var vtexture: texture_2d<f32>;
 @group(0) @binding(2)
@@ -41,8 +41,8 @@ fn fs_main(in: VertexOutput) -> @location(0) vec4<f32> {
 	
     
     var y = textureSample(ytexture,sam, in.tex_coords).r - 0.0625;
-    var u = textureSample(utexture,sam, in.tex_coords).r - 0.5;
-    var v = textureSample(utexture,sam, in.tex_coords).g - 0.5;
+    var u = textureSample(uvtexture,sam, in.tex_coords).r - 0.5;
+    var v = textureSample(uvtexture,sam, in.tex_coords).g - 0.5;
     
     
     //bt709
@@ -66,8 +66,7 @@ fn fs_main(in: VertexOutput) -> @location(0) vec4<f32> {
     // var b = y + 1.856 * (u);
     
     var rgb : vec3<f32> = vec3<f32>(r,g,b);
+    //remove below if you want rgb and not srgb
     rgb = pow(rgb,vec3<f32>(2.2));
-    //For image that already have srgb
-    //rgb = pow(rgb,vec3<f32>(1.0/2.2));
     return vec4<f32>(rgb,1.0) ;
 }
